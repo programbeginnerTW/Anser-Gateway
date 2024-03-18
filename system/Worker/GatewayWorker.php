@@ -18,6 +18,7 @@ use Workerman\Connection\TcpConnection;
 use AnserGateway\HTTPConnectionManager;
 use AnserGateway\Worker\WorkerRegistrar;
 use AnserGateway\ServiceDiscovery\ServiceDiscovery;
+use AnserGateway\ZeroTrust\ZeroTrust;
 
 class GatewayWorker extends WorkerRegistrar
 {
@@ -28,6 +29,8 @@ class GatewayWorker extends WorkerRegistrar
     public static $router;
 
     public static $serviceDiscovery = null;
+
+    public static $zeroTrust = null;
 
     public function __construct()
     {
@@ -72,6 +75,11 @@ class GatewayWorker extends WorkerRegistrar
             if ($config->enableServiceDiscovery) {
                 \AnserGateway\Worker\GatewayWorker::$serviceDiscovery = new ServiceDiscovery();
                 \AnserGateway\Worker\GatewayWorker::$serviceDiscovery->registerSelf($config->ssl ? 'https' : 'http', $config->listeningPort);
+            }
+
+            // ZeroTrust activation
+            if ($config->enableZerotTrust) {
+                \AnserGateway\Worker\GatewayWorker::$zeroTrust = new ZeroTrust();
             }
 
             ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
