@@ -183,7 +183,7 @@ class HTTPConnectionManager
      */
     public static function connectionMiddleware()
     {
-        return static function () {
+        // return static function () {
             return static function (\GuzzleHttp\Psr7\Request $request, array $options) {
                 
                 if ($request->getUri()->getPort() === null) {
@@ -215,7 +215,7 @@ class HTTPConnectionManager
 
                 return \GuzzleHttp\Promise\Create::promiseFor($response);
             };
-        };
+        // };
     }
 
 }
