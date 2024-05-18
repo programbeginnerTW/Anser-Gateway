@@ -42,7 +42,10 @@
 # Zero Trust
 #--------------------------------------------------------------------
 # zerotrust.enabled = 'true'  
-# zerotrust.issuerurl = 'https://keycloak.sdpmlab.org/'
-# zerotrust.realm = 'zerotrust'
-# zerotrust.account = 'ansergateway'
-# zerotrust.pwd = 'ansergateway'
+# zerotrust.tokenauthurl = 'https://keycloak.sdpmlab.org/realms/ZT/protocol/openid-connect/token'
+# zerotrust.realm = 'ZT'
+# zerotrust.clientID = 'exp_userservice'
+# zerotrust.clientSecret = 'UrPnxgyzZj1waUnF0wYYupUB87pafbcW'
+# zerotrust.grantType = 'password'
+# zerotrust.username = 'ansergateway@local.com'
+# zerotrust.password = 'ansergateway'

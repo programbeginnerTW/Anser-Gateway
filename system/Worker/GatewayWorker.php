@@ -76,15 +76,15 @@ class GatewayWorker extends WorkerRegistrar
                 \AnserGateway\Worker\GatewayWorker::$serviceDiscovery = new ServiceDiscovery();
                 \AnserGateway\Worker\GatewayWorker::$serviceDiscovery->registerSelf($config->ssl ? 'https' : 'http', $config->listeningPort);
             }
+            
+            // // ZeroTrust activation
+            // if ($config->enabledZeroTrust) {
+            //     \AnserGateway\Worker\GatewayWorker::$zeroTrust = new ZeroTrust();
+            // }
 
-            // ZeroTrust activation
-            if ($config->enableZerotTrust) {
-                \AnserGateway\Worker\GatewayWorker::$zeroTrust = new ZeroTrust();
-            }
-
-            ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
-            HTTPConnectionManager::$hostMaxConnectionNum = 150;
-            HTTPConnectionManager::$waitConnectionTimeout = 200;
+            // ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
+            // HTTPConnectionManager::$hostMaxConnectionNum = 150;
+            // HTTPConnectionManager::$waitConnectionTimeout = 200;
 
             // Timer包co ，實作服務發現邏輯...
             if (!is_null(\AnserGateway\Worker\GatewayWorker::$serviceDiscovery)) {
