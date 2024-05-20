@@ -13,12 +13,20 @@ class ZeroTrust extends BaseConfig
    */
    public bool $enabledzero = true;
 
+   /**
+    * host
+    *
+    * @var string
+    */
+   public string $host = '';
   /**
    * Feature Zero Trust enabled or not
    *
    * @var string
    */
-   public string $tokenauthurl ='';
+   public string $tokenauthurl = '';
+
+   public string $introspecturl = '';
 
   /**
    * Realm of Zero Trust
