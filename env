@@ -42,7 +42,9 @@
 # Zero Trust
 #--------------------------------------------------------------------
 # zerotrust.enabled = 'true'  
-# zerotrust.tokenauthurl = 'https://keycloak.sdpmlab.org/realms/ZT/protocol/openid-connect/token'
+# zerotrust.host = 'https://keycloak.sdpmlab.org/'
+# zerotrust.tokenauthurl = 'realms/ZT/protocol/openid-connect/token'
+# zerotrust.introspecturl = 'realms/ZT/protocol/openid-connect/introspect'
 # zerotrust.realm = 'ZT'
 # zerotrust.clientID = 'exp_userservice'
 # zerotrust.clientSecret = 'UrPnxgyzZj1waUnF0wYYupUB87pafbcW'
