@@ -141,7 +141,7 @@ class Gateway extends BaseConfig
      *
      * @var boolean
      */
-    public $enabledZeroTrust = false;
+    public $enableZeroTrust = false;
 
     // public function __construct()
     // {

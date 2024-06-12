@@ -18,10 +18,13 @@ class ZeroTrustFilter implements FilterInterface
      */
     public function before(Request $request, $arguments = null)
     {
-        $client = ZeroTrust::getZTClient();
-        
-        var_dump("TestFilter2 before");
-
+        $postData = $request->post();
+      
+        $data = ZeroTrust::verifyProcess($postData['username'], $postData['password'], $postData['serviceName'], $request, $postData['requestAction']);
+        $request->accessToken = $data["customClientAccessToken"];
+        $request->ticket      = $data["ticket"];
+        $request->username    = $postData['username'];
+        $request->password    = $postData['password'];
     }
 
     /**
@@ -38,7 +41,7 @@ class ZeroTrustFilter implements FilterInterface
         // $decode = json_decode($result);
         // $decode->asd = "TestFilter2 after";
         // return $response->withBody(json_encode($decode));
-        var_dump("TestFilter2 after");
+        // var_dump("TestFilter2 after");
     }
 
 }

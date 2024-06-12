@@ -6,55 +6,47 @@ use AnserGateway\Config\BaseConfig;
 
 class ZeroTrust extends BaseConfig
 {
-  /**
-   * Feature Zero Trust enabled or not
-   *
-   * @var string
-   */
-   public bool $enabledzero = true;
-
    /**
     * host
     *
     * @var string
     */
-   public string $host = '';
-  /**
-   * Feature Zero Trust enabled or not
-   *
-   * @var string
-   */
-   public string $tokenauthurl = '';
-
-   public string $introspecturl = '';
+  public string $host = '';
 
   /**
    * Realm of Zero Trust
    * 
    * @var string
    */
-   public string $realm='';
+  public string $realm = '';
 
   /**
-   * Client ID of ZT realm
+   * master Client ID of  realm
    *
    * @var string 
    */
-   public string $clientID='';
+  public string $gatewayClientID = '';
 
   /**
-   * clientSecret of ZT realm
+   * master clientSecret of  realm
    *
    * @var string 
    */
-   public string $clientSecret='';
+  public string $gatewayClientSecret = '';
 
   /**
-   * grantType of ZT realm
+   * 使用者自訂的驗證client
    *
-   * @var string 
+   * @var array
    */
-   public string $grantType='';
+  public array $customClient = [];
+
+  /**
+   * 服務名稱對應clientID
+   *
+   * @var array<string,string>
+   */
+  public array $serviceClientRelation = [];
 
   /**
    * Account of ZT realm
@@ -73,5 +65,32 @@ class ZeroTrust extends BaseConfig
   public function __construct()
   {
       parent::__construct();
+      // 因.env傳入為字串，故使用explode作切割
+      if(getenv('zerttrust.customClient') !== ''){
+        $parts = explode(',', getenv('zerttrust.customClient'));
+        foreach ($parts as $part) {
+            // 再將每個部分根據等號分割
+            $keyValue = explode('=', $part);
+            // 如果陣列中有兩個元素，將它們放入結果陣列
+            if (count($keyValue) == 2) {
+                $this->customClient[$keyValue[0]] = [
+                  "clientID" => $keyValue[0],
+                  "clientSecret" => $keyValue[1]
+                ];
+            }
+        }
+      }
+
+      if(getenv('zerttrust.serviceClientRelation') !== ''){
+        $parts = explode(',', getenv('zerttrust.serviceClientRelation'));
+        foreach ($parts as $part) {
+            // 再將每個部分根據等號分割
+            $keyValue = explode('=', $part);
+            // 如果陣列中有兩個元素，將它們放入結果陣列
+            if (count($keyValue) == 2) {
+                $this->serviceClientRelation[$keyValue[0]] = $keyValue[1];
+            }
+        }
+      }
   }
 }

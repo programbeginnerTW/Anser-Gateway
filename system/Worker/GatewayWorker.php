@@ -19,6 +19,7 @@ use AnserGateway\HTTPConnectionManager;
 use AnserGateway\Worker\WorkerRegistrar;
 use AnserGateway\ServiceDiscovery\ServiceDiscovery;
 use AnserGateway\ZeroTrust\ZeroTrust;
+use Config\ZeroTrust as ZeroTrustConfig;
 
 class GatewayWorker extends WorkerRegistrar
 {
@@ -77,13 +78,13 @@ class GatewayWorker extends WorkerRegistrar
                 \AnserGateway\Worker\GatewayWorker::$serviceDiscovery->registerSelf($config->ssl ? 'https' : 'http', $config->listeningPort);
             }
             
-            // // ZeroTrust activation
-            // if ($config->enabledZeroTrust) {
-            //     \AnserGateway\Worker\GatewayWorker::$zeroTrust = new ZeroTrust();
-            // }
+            // ZeroTrust activation
+            if ($config->enableZeroTrust) {
+                \AnserGateway\ZeroTrust\ZeroTrust::initialization(new ZeroTrustConfig());
+            }
 
             // ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
-            // HTTPConnectionManager::$hostMaxConnectionNum = 150;
+            // HTTPConnectionManager::$hostMaxConnectionNum = 500;
             // HTTPConnectionManager::$waitConnectionTimeout = 200;
 
             // Timer包co ，實作服務發現邏輯...
@@ -102,7 +103,7 @@ class GatewayWorker extends WorkerRegistrar
                 );
             }
         };
-
+        
         // Worker
         $webWorker->onMessage = static function (TcpConnection $connection, Request $request) use ($config) {
             Coroutine::run(static function () use ($connection, $request, $config): void {
