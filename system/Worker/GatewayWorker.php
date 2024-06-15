@@ -69,6 +69,10 @@ class GatewayWorker extends WorkerRegistrar
             Autoloader::$instance->composerRegister();
             require_once PROJECT_CONFIG . 'Service.php';
             //此處開始框架其他部件初始化
+            
+            ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
+            HTTPConnectionManager::$hostMaxConnectionNum = 500;
+            HTTPConnectionManager::$waitConnectionTimeout = 200;
 
             \AnserGateway\Worker\GatewayWorker::$routeList        = RouteCollector::loadRoutes();
             \AnserGateway\Worker\GatewayWorker::$router           = new Router(\AnserGateway\Worker\GatewayWorker::$routeList);
@@ -83,9 +87,7 @@ class GatewayWorker extends WorkerRegistrar
                 \AnserGateway\ZeroTrust\ZeroTrust::initialization(new ZeroTrustConfig());
             }
 
-            // ServiceList::setGlobalHandlerStack(HTTPConnectionManager::connectionMiddleware());
-            // HTTPConnectionManager::$hostMaxConnectionNum = 500;
-            // HTTPConnectionManager::$waitConnectionTimeout = 200;
+           
 
             // Timer包co ，實作服務發現邏輯...
             if (!is_null(\AnserGateway\Worker\GatewayWorker::$serviceDiscovery)) {

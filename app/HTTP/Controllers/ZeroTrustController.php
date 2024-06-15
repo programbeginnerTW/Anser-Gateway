@@ -29,18 +29,95 @@ class ZeroTrustController extends BaseController
 
     public function ztAPI()
     {
-        // $account = $this->request->post('account');
+        $action = (new Action(
+            "product",
+            "GET",
+            "api/v1/products/1"
+        ))
+        // ->addOption("json",[
+        //     'email' => $this->request->post('username'),
+        //     'password' => $this->request->post('password'),
+        // ])
+        ->doneHandler(function(
+            ResponseInterface $response,
+            Action $runtimeAction,
+        ) {
+            $body = $response->getBody()->getContents();
+            $data = json_decode($body, true);
+            $runtimeAction->setMeaningData($data);
+        })->failHandler(function (
+            ActionException $e
+        ) {
+            if($e->isClientError()){
+                $e->getAction()->setMeaningData([
+                    "code" => $e->getStatusCode(),
+                    "msg" => $e->getResponse()->getBody()->__toString()
+                ]);
+            }else if ($e->isServerError()){
+                $e->getAction()->setMeaningData([
+                    "code" => $e->getStatusCode(),
+                    "msg" => "server error"
+                ]);
+            }else if($e->isConnectError()){
+                $e->getAction()->setMeaningData([
+                    "msg" => $e->getMessage()
+                ]);
+            }   
+        });
+        $data = $action->do()->getMeaningData();
+
+        // if (isset($data["code"])) {
+        //     $res = json_encode([
+        //         "status" => 200,
+        //         "data" => $data["msg"]
+        //     ]);
+        // } else {
+        //     $res = json_encode([
+        //         "status" => 200,
+        //         "data" => $data["token"]
+        //     ]);
+        // }
+        $res = json_encode([
+            "status" => 200,
+            "data" => $data["data"]
+        ]);
+        return $this->response->withStatus(200)->withBody($res);
+    }
+
+    public function ztAdmin()
+    {
+        
+        // $username = $this->request->post('username');
         // $pwd = $this->request->post('pwd');
-        // \AnserGateway\ZeroTrust\ZeroTrust::getZTClient()->checkLogin($account, $pwd);`
+
+        // $data = $this->request->rawBody();
+        // $data = json_decode($data, true);
+        // // $zt = new ZT();
+        
+        // $admintoken = ZT::getAdminToken($data["username"], $data["pwd"]);
         // return $this->response->withStatus(302)->withHeader("Location","https://keycloak.sdpmlab.org/realms/ZT/protocol/openid-connect/token");
+        // \AnserGateway\ZeroTrust\ZeroTrust::initialization(new ZeroTrustConfig());
+        // \AnserGateway\ZeroTrust\ZeroTrust::verifyEndpoint($this->request);
+       
+        $res = json_encode([
+            "status" => 200,
+            // "msg" => 
+        ]);
+
+        return $this->response->withStatus(200)->withBody($res);
+    }
+
+    public function nonZTLogin()
+    {
+        $postData = $this->request->post();
         $action = (new Action(
             "ansergateway_userservice",
             "POST",
             "api/v1/user/login"
         ))
         ->addOption("json",[
-            'email' => $this->request->post('username'),
-            'password' => $this->request->post('password'),
+            'email' => $postData['username'],
+            'password' => $postData['password'],
         ])
         ->doneHandler(function(
             ResponseInterface $response,
@@ -55,7 +132,7 @@ class ZeroTrustController extends BaseController
             if($e->isClientError()){
                 $e->getAction()->setMeaningData([
                     "code" => $e->getStatusCode(),
-                    "msg" => "client error"
+                    "msg" => $e->getResponse()->getBody()->__toString()
                 ]);
             }else if ($e->isServerError()){
                 $e->getAction()->setMeaningData([
@@ -81,29 +158,6 @@ class ZeroTrustController extends BaseController
                 "data" => $data["token"]
             ]);
         }
-        return $this->response->withStatus(200)->withBody($res);
-    }
-
-    public function ztAdmin()
-    {
-        
-        // $username = $this->request->post('username');
-        // $pwd = $this->request->post('pwd');
-
-        // $data = $this->request->rawBody();
-        // $data = json_decode($data, true);
-        // // $zt = new ZT();
-        
-        // $admintoken = ZT::getAdminToken($data["username"], $data["pwd"]);
-        // return $this->response->withStatus(302)->withHeader("Location","https://keycloak.sdpmlab.org/realms/ZT/protocol/openid-connect/token");
-        // \AnserGateway\ZeroTrust\ZeroTrust::initialization(new ZeroTrustConfig());
-        // \AnserGateway\ZeroTrust\ZeroTrust::verifyEndpoint($this->request);
-       
-        $res = json_encode([
-            "status" => 200,
-            // "msg" => 
-        ]);
-
         return $this->response->withStatus(200)->withBody($res);
     }
 
