@@ -66,8 +66,8 @@ class ZeroTrust extends BaseConfig
   {
       parent::__construct();
       // 因.env傳入為字串，故使用explode作切割
-      if(getenv('zerttrust.customClient') !== ''){
-        $parts = explode(',', getenv('zerttrust.customClient'));
+      if(getenv('zerotrust.customClient') !== ''){
+        $parts = explode(',', getenv('zerotrust.customClient'));
         foreach ($parts as $part) {
             // 再將每個部分根據等號分割
             $keyValue = explode('=', $part);
@@ -81,8 +81,8 @@ class ZeroTrust extends BaseConfig
         }
       }
 
-      if(getenv('zerttrust.serviceClientRelation') !== ''){
-        $parts = explode(',', getenv('zerttrust.serviceClientRelation'));
+      if(getenv('zerotrust.serviceClientRelation') !== ''){
+        $parts = explode(',', getenv('zerotrust.serviceClientRelation'));
         foreach ($parts as $part) {
             // 再將每個部分根據等號分割
             $keyValue = explode('=', $part);

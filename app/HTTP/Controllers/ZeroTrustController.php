@@ -145,6 +145,7 @@ class ZeroTrustController extends BaseController
                 ]);
             }   
         });
+        dump($action);
         $data = $action->do()->getMeaningData();
 
         if (isset($data["code"])) {

@@ -66,7 +66,7 @@ class ZeroTrust implements ZeroTrustInterface{
         static::$ZeroTrustConfig = $config;
         // 驗證gateway client是否合法
         $verify = static::gatewayClientVerify();
-        // 如果合法就去撈其他client的資料
+        // 如果合法就取得其他client的資料
         if ($verify) {
             static::setResourcesUUID(static::$ZeroTrustConfig->customClient);
             static::afterInit();
@@ -377,15 +377,15 @@ class ZeroTrust implements ZeroTrustInterface{
     public static function verifyEndpoint(Request $request,string $customClientAccessToken, string $serviceName)
     {
         if (!isset(static::$ZeroTrustConfig->serviceClientRelation[$serviceName]) || is_null(static::$ZeroTrustConfig->serviceClientRelation[$serviceName])) {
-            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Please check if your .env zerttrust.serviceClientRelation has been set up", 1);
+            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Please check if your .env zerotrust.serviceClientRelation has been set up", 1);
         } 
 
         if (!array_key_exists(static::$ZeroTrustConfig->serviceClientRelation[$serviceName],static::$resourcesUUIDArray)) {
-            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Please check if your .env zerttrust.customClient has been set up", 1);
+            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Please check if your .env zerotrust.customClient has been set up", 1);
         }
         
         if (is_null($customClientAccessToken)) {
-            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Can not access this servie in Keycloak.", 1);
+            throw new \Exception("verifyEndpoint Step - {$serviceName} Service client error: Can not access this service in Keycloak.", 1);
         }
 
         $accessURL = "realms/" . static::$ZeroTrustConfig->realm . "/" . static::$keycloakAccessUrlMap["resourceSet"];
